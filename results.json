@@ -1,0 +1,90 @@
+[
+ {
+  "n": 1,
+  "input": "175 cm, 72 kg, age 28, male",
+  "expected": "BMI 23.5 Normal, BMR 1679",
+  "actual": "BMI 23.5 Normal, BMR 1679",
+  "status": "PASS",
+  "shot": "02_metrics_gauge.png"
+ },
+ {
+  "n": 2,
+  "input": "Height 90 cm",
+  "expected": "Error message shown",
+  "actual": "Enter age 15\u2013100, height 100\u2013250 cm (39\u201398 in) and weight 25",
+  "status": "PASS",
+  "shot": "03_invalid.png"
+ },
+ {
+  "n": 3,
+  "input": "+250, +500, Undo 250",
+  "expected": "Water 500 ml",
+  "actual": "500 ml",
+  "status": "PASS",
+  "shot": "04_water.png"
+ },
+ {
+  "n": 4,
+  "input": "23:00 to 06:30, 4 stars",
+  "expected": "7.5 h, rested 4/5",
+  "actual": "7.5 h, rested 4/5",
+  "status": "PASS",
+  "shot": "05_sleep.png"
+ },
+ {
+  "n": 5,
+  "input": "Reload page",
+  "expected": "Water 500 ml persists",
+  "actual": "500 ml",
+  "status": "PASS",
+  "shot": "05_sleep.png"
+ },
+ {
+  "n": 6,
+  "input": "Demo: 750 ml/5 h then 2000 ml/7 h",
+  "expected": "Score 62 then 89",
+  "actual": "62 then 89",
+  "status": "PASS",
+  "shot": "07_demo_after.png"
+ },
+ {
+  "n": 7,
+  "input": "Advice after demo",
+  "expected": "Targets-met message",
+  "actual": "Hydration and sleep targets met",
+  "status": "PASS",
+  "shot": "07_demo_after.png"
+ },
+ {
+  "n": 8,
+  "input": "Load 14-day sample",
+  "expected": "14 records loaded, trend drawn",
+  "actual": "14 records, chart rendered",
+  "status": "PASS",
+  "shot": "08_chart.png"
+ },
+ {
+  "n": 9,
+  "input": "Switch to imperial",
+  "expected": "68.9 in, 158.7 lb, BMI unchanged 23.5",
+  "actual": "68.9 in, 158.7 lb, BMI 23.5",
+  "status": "PASS",
+  "shot": "09_imperial.png"
+ },
+ {
+  "n": 10,
+  "input": "Doctor summary",
+  "expected": "One-page PDF generated",
+  "actual": "pages: 1",
+  "status": "PASS",
+  "shot": "doctor_summary.pdf"
+ },
+ {
+  "n": 11,
+  "input": "JS console errors during run",
+  "expected": "None",
+  "actual": "None",
+  "status": "PASS",
+  "shot": ""
+ }
+]

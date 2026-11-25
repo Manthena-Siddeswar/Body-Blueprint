@@ -1,0 +1,122 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BodyBlueprint HealthHub</title>
+<style>
+:root{--bg:#f3f6f4;--ink:#12302b;--mut:#5d716c;--card:#fff;--line:#d9e3df;--teal:#0f766e;--coral:#e0573f;--amber:#d9a21b;--blue:#3b82c4}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Georgia,'Times New Roman',serif}
+h1,h2,h3,button,label,input,select,.n{font-family:system-ui,-apple-system,'Segoe UI',sans-serif}
+header{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;padding:18px 28px;border-bottom:1px solid var(--line);background:#fff}
+h1{margin:0;font-size:22px}h2{margin:0 0 10px;font-size:17px}
+main{max-width:1100px;margin:auto;padding:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:18px}
+.c{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px}.w{grid-column:1/-1}
+label{display:block;font-size:13px;color:var(--mut);margin:8px 0 2px}
+input,select{width:100%;padding:9px;border:1px solid var(--line);border-radius:6px;font-size:15px}
+button{cursor:pointer;border:0;border-radius:6px;padding:9px 14px;background:var(--teal);color:#fff;font-size:14px;font-weight:600}
+button.g{background:#e8efec;color:var(--ink)}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.r{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.r>*{flex:1}
+.big{font-size:34px;font-weight:700}.mut{color:var(--mut);font-size:14px}
+.ring{width:190px;height:190px;margin:auto;display:block}
+.glass{height:26px;background:#e3edf6;border-radius:13px;overflow:hidden;margin:10px 0}.glass i{display:block;height:100%;width:0;background:var(--blue);transition:width .6s}
+.stars button{background:none;color:#c9d3d0;font-size:26px;padding:0 4px}.stars button.on{color:var(--amber)}
+.adv{border-left:4px solid var(--teal);background:#f0f7f5;padding:9px 12px;margin:8px 0;border-radius:4px;font-family:system-ui,sans-serif;font-size:15px}.adv.w2{border-color:var(--coral);background:#fdf1ee}
+table{width:100%;border-collapse:collapse;font:14px system-ui}td,th{padding:5px 8px;border-bottom:1px solid var(--line);text-align:left}
+#err{color:var(--coral);font:14px system-ui;min-height:20px}
+#pr{display:none}
+@media print{body>*:not(#pr){display:none}#pr{display:block;padding:20px;font:13px system-ui}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style></head><body>
+<header><div><h1>BodyBlueprint HealthHub</h1><span class="mut">One dashboard for body metrics, water and sleep</span></div>
+<div class="r" style="flex:none"><button class="g" id="demo">Run 62→89 demo</button><button class="g" id="samp">Load 14-day sample</button><button id="pdf">Doctor summary (PDF)</button><button class="g" id="rem">Hydration reminders</button></div></header>
+<main>
+<section class="c"><h2>Body profile</h2>
+<label>Units</label><select id="u"><option value="m">Metric (cm, kg)</option><option value="i">Imperial (in, lb)</option></select>
+<label>Age (years)</label><input id="age" type="number" value="28"><label id="hl">Height (cm)</label><input id="h" type="number" value="175" step="0.1"><label id="wl">Weight (kg)</label><input id="wt" type="number" value="72" step="0.1">
+<label>Biological sex</label><select id="sex"><option value="m">Male</option><option value="f">Female</option></select>
+<label>Fitness goal</label><select id="goal"><option value="cut">Cut</option><option value="maintain" selected>Maintain</option><option value="bulk">Bulk</option></select>
+<div class="r"><button id="calc">Calculate</button></div><div id="err"></div></section>
+<section class="c"><h2>BMI &amp; BMR (WHO bands)</h2><svg id="gauge" viewBox="0 0 240 140" style="width:100%;max-width:300px;display:block;margin:auto"></svg>
+<div class="big n"><span id="bmi">–</span> <span class="mut" id="cat"></span></div><div class="mut">BMR (Mifflin-St Jeor): <b id="bmr">–</b> kcal/day · Calorie target: <b id="cal">–</b> kcal</div></section>
+<section class="c"><h2>Daily Wellness Score</h2><svg class="ring" viewBox="0 0 120 120"><circle cx="60" cy="60" r="50" fill="none" stroke="#e3edf2" stroke-width="12"/><circle id="arc" cx="60" cy="60" r="50" fill="none" stroke="var(--teal)" stroke-width="12" stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="314" transform="rotate(-90 60 60)" style="transition:stroke-dashoffset .9s"/><text id="sc" x="60" y="66" text-anchor="middle" font-size="30" font-weight="700" fill="#12302b">–</text></svg>
+<p class="mut" style="text-align:center" id="scl">Calculate your profile first.</p><div class="mut" id="sub"></div></section>
+<section class="c"><h2>Water</h2><div class="n"><b id="wv">0</b> / <span id="wg">–</span> ml</div><div class="glass"><i id="wf"></i></div>
+<div class="r"><button data-w="250">+250 ml</button><button data-w="500">+500 ml</button><button class="g" data-w="-250">Undo 250</button></div></section>
+<section class="c"><h2>Sleep</h2><div class="r"><div><label>Bedtime</label><input id="bed" type="time" value="23:00"></div><div><label>Wake time</label><input id="wake" type="time" value="06:30"></div></div>
+<label>How rested do you feel?</label><div class="stars" id="stars"></div><div class="r"><button id="sl">Save sleep</button></div><div class="mut" id="sv"></div></section>
+<section class="c"><h2>Personalised advice</h2><div id="adv"></div><p class="mut" style="font-size:12px">General educational wellness information based on WHO guidance. Not a medical diagnosis; consult a clinician for medical concerns.</p></section>
+<section class="c w"><h2>7-day trend: sleep vs water vs weight</h2><div style="height:300px"><canvas id="ch"></canvas></div><div id="chf" class="mut"></div></section>
+</main>
+<div id="pr"></div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+const SAMPLE=[{"date": "2026-11-11", "weightKg": 72.3, "waterMl": 1750, "sleepHours": 6.5, "sleepQuality": 4}, {"date": "2026-11-12", "weightKg": 72.3, "waterMl": 2500, "sleepHours": 6, "sleepQuality": 4}, {"date": "2026-11-13", "weightKg": 72.3, "waterMl": 2000, "sleepHours": 8, "sleepQuality": 5}, {"date": "2026-11-14", "weightKg": 72.1, "waterMl": 1000, "sleepHours": 7, "sleepQuality": 4}, {"date": "2026-11-15", "weightKg": 71.8, "waterMl": 1000, "sleepHours": 6.25, "sleepQuality": 4}, {"date": "2026-11-16", "weightKg": 71.6, "waterMl": 1000, "sleepHours": 6.25, "sleepQuality": 4}, {"date": "2026-11-17", "weightKg": 71.8, "waterMl": 1250, "sleepHours": 6, "sleepQuality": 4}, {"date": "2026-11-18", "weightKg": 71.8, "waterMl": 2000, "sleepHours": 5.5, "sleepQuality": 3}, {"date": "2026-11-19", "weightKg": 71.9, "waterMl": 1250, "sleepHours": 5.5, "sleepQuality": 3}, {"date": "2026-11-20", "weightKg": 71.6, "waterMl": 1500, "sleepHours": 6.5, "sleepQuality": 4}, {"date": "2026-11-21", "weightKg": 71.5, "waterMl": 2000, "sleepHours": 6, "sleepQuality": 4}, {"date": "2026-11-22", "weightKg": 71.4, "waterMl": 1000, "sleepHours": 6.5, "sleepQuality": 4}, {"date": "2026-11-23", "weightKg": 71.4, "waterMl": 1500, "sleepHours": 7, "sleepQuality": 4}, {"date": "2026-11-24", "weightKg": 71.2, "waterMl": 2000, "sleepHours": 6, "sleepQuality": 4}];
+const $=id=>document.getElementById(id),K='bb_state';
+const today=()=>new Date().toISOString().slice(0,10);
+let S={p:null,logs:{}},star=3,chart;
+try{S=JSON.parse(localStorage.getItem(K))||S}catch(e){}
+const save=()=>{try{localStorage.setItem(K,JSON.stringify(S))}catch(e){}};
+const log=()=>S.logs[today()]||(S.logs[today()]={waterMl:0,sleepHours:0,sleepQuality:0,weightKg:S.p?S.p.kg:0});
+// ---- formulas (all stored in metric) ----
+const bmiOf=(kg,cm)=>kg/Math.pow(cm/100,2);
+const bmrOf=p=>10*p.kg+6.25*p.cm-5*p.age+(p.sex==='m'?5:-161);
+const who=b=>b<18.5?['Underweight','#3b82c4']:b<25?['Normal','#0f766e']:b<30?['Overweight','#d9a21b']:['Obese','#e0573f'];
+const goalMl=kg=>Math.round(kg*35/250)*250;
+const sBmi=b=>b>=18.5&&b<=24.9?100:Math.max(0,100-12*(b<18.5?18.5-b:b-24.9));
+const sWater=(ml,g)=>Math.min(1,ml/g)*100,sSleep=h=>Math.min(1,h/8)*100;
+const score=(p,l)=>{const b=bmiOf(p.kg,p.cm),a=sBmi(b),w=sWater(l.waterMl,goalMl(p.kg)),s=sSleep(l.sleepHours);return{total:Math.round(.3*a+.35*w+.35*s),a,w,s}};
+// ---- UI ----
+function readProfile(){const m=$('u').value==='m',f=m?1:2.54,g=m?1:0.45359237;
+ const p={age:+$('age').value,cm:+$('h').value*f,kg:+$('wt').value*g,sex:$('sex').value,goal:$('goal').value,units:$('u').value};
+ if(!(p.age>=15&&p.age<=100&&p.cm>=100&&p.cm<=250&&p.kg>=25&&p.kg<=300)){$('err').textContent='Enter age 15–100, height 100–250 cm (39–98 in) and weight 25–300 kg (55–660 lb).';return null}
+ $('err').textContent='';return p}
+function fillInputs(){const p=S.p;if(!p)return;const m=p.units==='m';$('u').value=p.units;$('age').value=p.age;$('h').value=+(m?p.cm:p.cm/2.54).toFixed(1);$('wt').value=+(m?p.kg:p.kg/0.45359237).toFixed(1);$('sex').value=p.sex;$('goal').value=p.goal;$('hl').textContent=m?'Height (cm)':'Height (in)';$('wl').textContent=m?'Weight (kg)':'Weight (lb)'}
+function gauge(b){const pt=(a,r)=>[120+r*Math.cos(Math.PI*(1-a/180)),120-r*Math.sin(Math.PI*(1-a/180))],ang=v=>(Math.min(40,Math.max(15,v))-15)/25*180;
+ const seg=[[15,18.5,'#3b82c4'],[18.5,25,'#0f766e'],[25,30,'#d9a21b'],[30,40,'#e0573f']];
+ let h=seg.map(([a,c,col])=>{const[x1,y1]=pt(ang(a),95),[x2,y2]=pt(ang(c),95);return`<path d="M${x1} ${y1}A95 95 0 0 1 ${x2} ${y2}" fill="none" stroke="${col}" stroke-width="16"/>`}).join('');
+ if(b){const[x,y]=pt(ang(b),78);h+=`<line x1="120" y1="120" x2="${x}" y2="${y}" stroke="#12302b" stroke-width="3" stroke-linecap="round"/><circle cx="120" cy="120" r="6" fill="#12302b"/>`}
+ $('gauge').innerHTML=h+'<text x="22" y="136" font-size="9" fill="#5d716c">15</text><text x="205" y="136" font-size="9" fill="#5d716c">40</text>'}
+function advice(p,l){const g=goalMl(p.kg),b=bmiOf(p.kg,p.cm),out=[];
+ if(l.sleepHours&&l.sleepHours<7)out.push(['w2','Sleep deficit detected: increase water intake and plan an earlier bedtime to offset fatigue.']);
+ if(l.sleepHours>9)out.push(['','Long sleep recorded. If you still feel tired, consider speaking with a clinician.']);
+ if(l.waterMl<g*.5)out.push(['w2',`Hydration is below half of your ${g} ml goal. Drink a glass now.`]);
+ else if(l.waterMl<g*.8)out.push(['',`${g-l.waterMl} ml left to reach your hydration goal.`]);
+ if(b<18.5)out.push(['w2','BMI is in the underweight band. Focus on balanced, nutrient-dense meals.']);
+ if(b>=25)out.push(['w2','BMI is above the normal band. Light daily activity and portion awareness help; BMI does not measure body composition.']);
+ if(l.waterMl>=g*.8&&l.sleepHours>=7)out.push(['','Hydration and sleep targets met! Maintain physical activity to match your BMR baseline.']);
+ if(!out.length)out.push(['','Log water and sleep to get personalised advice.']);
+ $('adv').innerHTML=out.map(([c,t])=>`<div class="adv ${c}">${t}</div>`).join('')}
+function render(){const p=S.p;fillInputs();
+ if(!p){gauge();return}const l=log(),b=bmiOf(p.kg,p.cm),[c,col]=who(b),g=goalMl(p.kg),sc=score(p,l),k=Math.round(bmrOf(p)),adj={cut:.9,maintain:1,bulk:1.1}[p.goal];
+ $('bmi').textContent=b.toFixed(1);$('cat').textContent=c;$('cat').style.color=col;$('bmr').textContent=k;$('cal').textContent=Math.round(k*adj)+' (BMR only, no activity factor)';gauge(b);
+ $('wv').textContent=l.waterMl;$('wg').textContent=g;$('wf').style.width=Math.min(100,l.waterMl/g*100)+'%';
+ $('sc').textContent=sc.total;$('arc').style.strokeDashoffset=314*(1-sc.total/100);
+ $('scl').textContent=sc.total>=85?'Optimal balance':sc.total>=65?'Good, room to improve':'Needs attention';
+ $('sub').textContent=`BMI ${Math.round(sc.a)}/100 (30%) · Water ${Math.round(sc.w)}/100 (35%) · Sleep ${Math.round(sc.s)}/100 (35%)`;
+ if(l.sleepQuality){star=l.sleepQuality;paint()}$('sv').textContent=l.sleepHours?`${l.sleepHours} h, rested ${l.sleepQuality}/5`:'No sleep logged today.';
+ advice(p,l);trend()}
+function fallback(ks){const cv=$('ch'),W=cv.width=cv.parentNode.clientWidth||900,H=cv.height=300,x=cv.getContext('2d');x.clearRect(0,0,W,H);if(!ks.length)return;
+ [['sleepHours','#3b82c4','Sleep (h)'],['waterMl','#0f766e','Water (ml)'],['weightKg','#e0573f','Weight (kg)']].forEach(([k,c,n],j)=>{const v=ks.map(d=>S.logs[d][k]||0),lo=Math.min(...v)*.9,hi=Math.max(...v)*1.05||1;x.strokeStyle=c;x.fillStyle=c;x.lineWidth=2;x.beginPath();
+  v.forEach((y,i)=>{const px=50+i*(W-100)/Math.max(1,ks.length-1),py=H-40-(y-lo)/(hi-lo||1)*(H-80);i?x.lineTo(px,py):x.moveTo(px,py)});x.stroke();x.font='13px system-ui';x.fillText(n,60+j*130,18)});
+ x.fillStyle='#5d716c';x.font='11px system-ui';ks.forEach((d,i)=>x.fillText(d.slice(5),40+i*(W-100)/Math.max(1,ks.length-1),H-12))}
+function trend(){const ks=Object.keys(S.logs).sort().slice(-7),f=$('chf');
+ f.textContent=ks.length?'':'No history yet. Load the 14-day sample or log for a few days.';if(typeof Chart==='undefined'){fallback(ks);return}
+ const d=k=>ks.map(x=>S.logs[x][k]||null),ds=(t,k,y,c)=>({label:t,data:d(k),yAxisID:y,borderColor:c,backgroundColor:c,tension:.3,spanGaps:true});
+ if(chart)chart.destroy();
+ chart=new Chart($('ch'),{type:'line',data:{labels:ks,datasets:[ds('Sleep (h)','sleepHours','y','#3b82c4'),ds('Water (ml)','waterMl','y1','#0f766e'),ds('Weight (kg)','weightKg','y2','#e0573f')]},
+ options:{maintainAspectRatio:false,scales:{y:{position:'left',title:{display:true,text:'Sleep h'},min:0},y1:{position:'right',grid:{drawOnChartArea:false},title:{display:true,text:'ml'}},y2:{position:'right',grid:{drawOnChartArea:false},title:{display:true,text:'kg'}}}}})}
+// ---- events ----
+$('calc').onclick=()=>{const p=readProfile();if(!p)return;S.p=p;log().weightKg=+p.kg.toFixed(1);save();render()};
+$('u').onchange=()=>{const p=readProfile();if(p){S.p=p;save()}else{S.p&&(S.p.units=$('u').value)}render()};
+document.querySelectorAll('[data-w]').forEach(b=>b.onclick=()=>{if(!S.p)return $('err').textContent='Calculate your profile first.';const l=log();l.waterMl=Math.max(0,l.waterMl+ +b.dataset.w);save();render()});
+$('stars').innerHTML=[1,2,3,4,5].map(i=>`<button data-s="${i}" aria-label="${i} stars">★</button>`).join('');
+const paint=()=>document.querySelectorAll('#stars button').forEach(b=>b.classList.toggle('on',+b.dataset.s<=star));paint();
+document.querySelectorAll('#stars button').forEach(b=>b.onclick=()=>{star=+b.dataset.s;paint()});
+$('sl').onclick=()=>{if(!S.p)return $('err').textContent='Calculate your profile first.';const[a,b]=$('bed').value.split(':').map(Number),[c,d]=$('wake').value.split(':').map(Number);let m=(c*60+d)-(a*60+b);if(m<=0)m+=1440;const l=log();l.sleepHours=+(m/60).toFixed(2);l.sleepQuality=star;save();render()};
+$('samp').onclick=()=>{SAMPLE.forEach(r=>S.logs[r.date]={waterMl:r.waterMl,sleepHours:r.sleepHours,sleepQuality:r.sleepQuality,weightKg:r.weightKg});save();render()};
+$('demo').onclick=()=>{$('u').value='m';$('age').value=28;$('h').value=175;$('wt').value=72;$('sex').value='m';$('calc').click();const l=log();l.waterMl=750;l.sleepHours=5;l.sleepQuality=2;save();render();
+ setTimeout(()=>{l.waterMl=2000;l.sleepHours=7;l.sleepQuality=4;save();render()},2500)};
+$('rem').onclick=async()=>{if(!('Notification' in window))return alert('Notifications are not supported here.');if(await Notification.requestPermission()!=='granted')return;
+ setInterval(()=>{const h=new Date().getHours();if(h>=8&&h<21)new Notification('Time for a glass of water 💧')},90*60000);alert('Reminders on every 90 min, 8:00–21:00, while this tab is open.')};
+$('pdf').onclick=()=>{if(!S.p)return $('err').textContent='Calculate your profile first.';const p=S.p,b=bmiOf(p.kg,p.cm),ks=Object.keys(S.logs).sort().slice(-7);
+ $('pr').innerHTML=`<h2>Health summary – ${today()}</h2><p>Age ${p.age}, ${p.sex==='m'?'male':'female'}, ${p.cm.toFixed(1)} cm, ${p.kg.toFixed(1)} kg · BMI ${b.toFixed(1)} (${who(b)[0]}) · BMR ${Math.round(bmrOf(p))} kcal · Wellness score ${score(p,log()).total}/100</p><table><tr><th>Date</th><th>Weight kg</th><th>Water ml</th><th>Sleep h</th><th>Rested /5</th></tr>${ks.map(k=>{const l=S.logs[k];return`<tr><td>${k}</td><td>${l.weightKg||'-'}</td><td>${l.waterMl}</td><td>${l.sleepHours}</td><td>${l.sleepQuality}</td></tr>`}).join('')}</table><p style="font-size:11px">General educational wellness information, not a medical diagnosis.</p>`;window.print()};
+render();
+if(typeof module!=='undefined')module.exports={bmiOf,bmrOf,score,goalMl};
+</script></body></html>

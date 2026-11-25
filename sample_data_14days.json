@@ -1,0 +1,100 @@
+[
+ {
+  "date": "2026-11-11",
+  "weightKg": 72.3,
+  "waterMl": 1750,
+  "sleepHours": 6.5,
+  "sleepQuality": 4
+ },
+ {
+  "date": "2026-11-12",
+  "weightKg": 72.3,
+  "waterMl": 2500,
+  "sleepHours": 6,
+  "sleepQuality": 4
+ },
+ {
+  "date": "2026-11-13",
+  "weightKg": 72.3,
+  "waterMl": 2000,
+  "sleepHours": 8,
+  "sleepQuality": 5
+ },
+ {
+  "date": "2026-11-14",
+  "weightKg": 72.1,
+  "waterMl": 1000,
+  "sleepHours": 7,
+  "sleepQuality": 4
+ },
+ {
+  "date": "2026-11-15",
+  "weightKg": 71.8,
+  "waterMl": 1000,
+  "sleepHours": 6.25,
+  "sleepQuality": 4
+ },
+ {
+  "date": "2026-11-16",
+  "weightKg": 71.6,
+  "waterMl": 1000,
+  "sleepHours": 6.25,
+  "sleepQuality": 4
+ },
+ {
+  "date": "2026-11-17",
+  "weightKg": 71.8,
+  "waterMl": 1250,
+  "sleepHours": 6,
+  "sleepQuality": 4
+ },
+ {
+  "date": "2026-11-18",
+  "weightKg": 71.8,
+  "waterMl": 2000,
+  "sleepHours": 5.5,
+  "sleepQuality": 3
+ },
+ {
+  "date": "2026-11-19",
+  "weightKg": 71.9,
+  "waterMl": 1250,
+  "sleepHours": 5.5,
+  "sleepQuality": 3
+ },
+ {
+  "date": "2026-11-20",
+  "weightKg": 71.6,
+  "waterMl": 1500,
+  "sleepHours": 6.5,
+  "sleepQuality": 4
+ },
+ {
+  "date": "2026-11-21",
+  "weightKg": 71.5,
+  "waterMl": 2000,
+  "sleepHours": 6,
+  "sleepQuality": 4
+ },
+ {
+  "date": "2026-11-22",
+  "weightKg": 71.4,
+  "waterMl": 1000,
+  "sleepHours": 6.5,
+  "sleepQuality": 4
+ },
+ {
+  "date": "2026-11-23",
+  "weightKg": 71.4,
+  "waterMl": 1500,
+  "sleepHours": 7,
+  "sleepQuality": 4
+ },
+ {
+  "date": "2026-11-24",
+  "weightKg": 71.2,
+  "waterMl": 2000,
+  "sleepHours": 6,
+  "sleepQuality": 4
+ }
+]
